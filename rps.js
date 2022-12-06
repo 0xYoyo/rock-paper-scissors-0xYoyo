@@ -8,45 +8,62 @@ function getComputerChoice(arr) {
     let rand = Math.floor(Math.random()*arr.length);
     return arr[rand];
 }
+const h1 = document.querySelector('h1');
+const h2 = document.querySelector('h2');
+
+let result;
+let wScore =0;
+let lScore =0;
 
 function playRound(playerSelection, computerSelection) {
     if(playerSelection.toLowerCase() === computerSelection){
-        console.log("It's a draw!");
-        return 0
+        h1.textContent = "It's a draw!";
+        result = 0;
     } else if(
         (playerSelection.toLowerCase() === "rock" && computerSelection === "scissors") ||
         (playerSelection.toLowerCase() === "paper" && computerSelection === "rock") ||
         (playerSelection.toLowerCase() === "scissors" && computerSelection === "paper") 
     ){
-        console.log(`You win! ${playerSelection} beats ${computerSelection}`);
-        return 1
+        h1.textContent = `You win! ${playerSelection} beats ${computerSelection}`;
+        result = 1;
     } else{
-        console.log(`You Lose! ${computerSelection} beats ${playerSelection}`);
-        return 2
+        h1.textContent = `You Lose! ${computerSelection} beats ${playerSelection}`;
+        result = 2;
     }
+    checkResult()
 }
+    
+    const buttons = document.querySelectorAll('button')
+    buttons.forEach((button) => {
+     button.addEventListener('click', function(e){
+            playRound(e.target.id, getComputerChoice(outcomes));
+        })
+    })
 
-function game() {
-    console.log("Let's play a best of 5 game!")
-    let wScore =0;
-    let lScore =0;
-    for (let i = 0; i < 5; i++) {
-      let computerS = getComputerChoice(outcomes);
-      let playerS = prompt("Rock? Paper? Scissors? Shoot!");
-      let result = playRound(playerS, computerS);
+    
+    
+
+function checkResult() {
         if (result === 1) {
             wScore++;
+            h2.textContent = `Score is: ${wScore} - ${lScore}`;
         } else if(result === 2) {
             lScore++;
+            h2.textContent = `Score is: ${wScore} - ${lScore}`;
         }
-    }
-    if (wScore > lScore) {
-        alert(`Congrats! You won ${wScore} - ${lScore}!`);
-    } else if(lScore > wScore) {
-        alert(`Oh no... You lost ${lScore} - ${wScore}`);
-    } else{
-        alert(`It's a tie! ${wScore} - ${lScore}`);
-    }
+        hasEnded()
 }
 
-game();
+    function hasEnded(){
+        if(wScore === 5 || lScore === 5) {
+    if (wScore > lScore) {
+        h1.textContent = `Congrats! You have won the machine!`;
+    } else {
+        h1.textContent = `Oh no... You lost have lost to the machine`;
+    } 
+    result = 0;
+    wScore = 0;
+    lScore = 0;
+    h2.textContent = 'Refresh or press any button to restart';
+    }
+}
